@@ -5,8 +5,10 @@ node-mysql2 seems to swap x and y values of a geographic Point stored in mysql8 
 ## How to reproduce
 
 1. Ensure that a MySQL8 instance is running.
+2. Clone this repository.
 2. Ensure that a schema as described in `db.sql` exists.
-3. Set up a `.env` file according to the `.env.template`. 
+3. Set up a `.env` file according to the `.env.template`.
+4. `npm ci`
 4. Run the index.js script `MYSQL_VERSION=8 node index.js`.
 
 The last step above – script execution – should produce the following output:
