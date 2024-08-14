@@ -2,7 +2,7 @@ import 'dotenv/config';
 import mysql from 'mysql2/promise';
 
 const queryXYAsConvertedByMySql2Driver = async conn => {
-    const sql = 'SELECT pos as pos_as_converted_by_mysql2 FROM testpoint';
+    const sql = 'SELECT pos FROM testpoint';
     const [results, _fields] = await conn.execute(sql);
     return results;
 }
@@ -36,11 +36,13 @@ const main = async () => {
 
     console.log(`Testing with MySQL v${process.env.MYSQL_VERSION}...`, '\n');
 
+    console.log("AS INTERPRETED BY MYSQL8's ST_X, ST_Y functions:")
     const xy = await queryXYAsInterpretedByMySql(conn);
-    console.log(xy, '\n');
+    console.table(xy);
 
+    console.log("AS INTERPRETED BY node-mysql2:")
     const results = await queryXYAsConvertedByMySql2Driver(conn);
-    console.log(results, '\n');
+    console.table(results.map(r => r.pos));
 
     if (process.env.MYSQL_VERSION === '8') {
         // const latLong = await queryLatLongAsInterpretedByMySql(conn);
