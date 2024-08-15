@@ -1,15 +1,19 @@
 ## Problem
 
-[node-mysql2](https://github.com/sidorares/node-mysql2) seems to swap x and y values of a geographic Point stored in mysql8 when it is retrieved through node-mysql2 without special parsing. 
+node-mysql2 seems to swap x and y values of a geographic Point stored in mysql8 when it is retrieved through node-mysql2 without special parsing. 
+
+## Repository that demonstrates the bug
+
+https://github.com/justbhoot/poc-node-mysql2-bug-srid-4326-mysql8
 
 ## How to reproduce
 
 1. Ensure that a MySQL8 instance is running.
-2. Clone this repository.
-2. Ensure that a schema as described in `db.sql` exists.
-3. Set up a `.env` file according to the `.env.template`.
-4. `npm ci`
-4. Run the index.js script `MYSQL_VERSION=8 node index.js`.
+2. Clone the above mentioned repository.
+3. Ensure that a schema as described in `db.sql` exists.
+4. Set up a `.env` file according to the `.env.template`.
+5. `npm ci`
+6. Run the index.js script `MYSQL_VERSION=8 node index.js`.
 
 The last step above – script execution – should produce the following output:
 
@@ -24,6 +28,7 @@ AS INTERPRETED BY MYSQL8's ST_X, ST_Y functions:
 │    0    │ -33.3109317 │ 117.34617329999999 │     4326     │
 │    1    │ -35.3109317 │    101.3461733     │      0       │
 └─────────┴─────────────┴────────────────────┴──────────────┘
+
 AS INTERPRETED BY node-mysql2:
 ┌─────────┬─────────────┬─────────────┐
 │ (index) │      x      │      y      │
@@ -40,6 +45,22 @@ For all the rows:
 - `x` column in the second table should show the value in `st_x` column of first table.
 - `y` column in the second table should show the value in `st_y` column of first table.
 
+To demonstrate the same from MySQL CLI Shell:
+
+```
+mysql> select st_astext(pos), st_x(pos), st_latitude(pos) from testpoint where st_srid(pos) = 4326;
+
++--------------------------------+-------------+------------------+
+| st_astext(pos)                 | st_x(pos)   | st_latitude(pos) |
++--------------------------------+-------------+------------------+
+| POINT(-33.3109317 117.3461733) | -33.3109317 |      -33.3109317 |
++--------------------------------+-------------+------------------+
+1 row in set (0.00 sec)
+
+```
+
+In the above query result, `st_x()` and `st_latitude()` point to the first value in the Point, which is in accordance with how SRID 4326 is defined in MySQL.
+
 ## Actual result
 
 For the first row 0 (containing data for SRID 4326):
@@ -54,13 +75,14 @@ AS INTERPRETED BY MYSQL8's ST_X, ST_Y functions:
 ┌─────────┬─────────────┬────────────────────┬──────────────┐
 │ (index) │  st_x(pos)  │     st_y(pos)      │ st_srid(pos) │
 ├─────────┼─────────────┼────────────────────┼──────────────┤
-│    0    │ -33.3109317 │ 117.34617329999999 │     4326     │
+│    0    │ -33.3109317 │ 117.34617329999999 │     4326     │ <---- correct: x is lat, y is long
 └─────────┴─────────────┴────────────────────┴──────────────┘
+
 AS INTERPRETED BY node-mysql2:
 ┌─────────┬─────────────┬─────────────┐
 │ (index) │      x      │      y      │
 ├─────────┼─────────────┼─────────────┤
-│    0    │ 117.3461733 │ -33.3109317 │
+│    0    │ 117.3461733 │ -33.3109317 │ <---- incorrect: x is long, y is lat
 └─────────┴─────────────┴─────────────┘
 ```
 
