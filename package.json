@@ -11,7 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mysql/xdevapi": "8.0.35",
     "dotenv": "^16.4.4",
+    "mysql": "^2.18.1",
     "mysql2": "^3.11.0"
   }
 }
