@@ -1,1 +1,4 @@
 .env
+.bsp/
+.metals/
+.scala-build/
