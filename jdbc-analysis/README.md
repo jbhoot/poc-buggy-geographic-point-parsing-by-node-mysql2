@@ -1,6 +1,6 @@
 # README
 
-This is a complementary script intended to provide jdbc driver's perspective [on this problem]([https://github.com/justbhoot/poc-node-mysql2-bug-srid-4326-mysql8](https://github.com/sidorares/node-mysql2/issues/2959)) titled *[Bug?] node-mysql2 seems to swap x and y values of a geographic Point (SRID 4326) stored in mysql8 #2959*.
+This is a complementary script intended to provide jdbc driver's perspective [on this problem](https://github.com/sidorares/node-mysql2/issues/2959) titled *[Bug?] node-mysql2 seems to swap x and y values of a geographic Point (SRID 4326) stored in mysql8 #2959*.
 
 ## How-to
 
