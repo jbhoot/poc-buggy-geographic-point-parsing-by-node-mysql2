@@ -2,9 +2,7 @@
 
 node-mysql2 seems to swap x and y values of a geographic Point stored in mysql8 when it is retrieved through node-mysql2 without special parsing. 
 
-## Repository that demonstrates the bug
-
-https://github.com/justbhoot/poc-node-mysql2-bug-srid-4326-mysql8
+This repository tries to demonstrate the bug.
 
 ## How to reproduce
 
