@@ -8,10 +8,11 @@ This repository tries to demonstrate the bug.
 
 1. Ensure that a MySQL8 instance is running.
 2. Clone the above mentioned repository.
-3. Ensure that a schema as described in `db.sql` exists.
-4. Set up a `.env` file according to the `.env.template`.
-5. `npm ci`
-6. Run the index.js script `MYSQL_VERSION=8 node index.js`.
+3. Switch to branch feat/demo.
+4. Ensure that a schema as described in `db.sql` exists.
+5. Set up a `.env` file according to the `.env.template`.
+6. `npm ci`
+7. Run the index.js script `MYSQL_VERSION=8 node index.js`.
 
 The last step above – script execution – should produce the following output:
 
